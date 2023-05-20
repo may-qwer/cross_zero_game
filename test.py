@@ -1,31 +1,13 @@
-import pygame
+array1 = [1, 3, 5, 6, 9]
+array2 = [1, 5, 9]
 
-# инициализация Pygame
-pygame.init()
+set1 = set(array1)
+set2 = set(array2)
 
-# установка цветов
-BLACK = (0, 0, 0)
-WHITE = (255, 255, 255)
+common_nums = set1.intersection(set2)
 
-# создание экрана
-screen = pygame.display.set_mode((500, 500))
-pygame.display.set_caption("Контур круга")
-
-# рисование круга
-x, y = 250, 250
-radius = 50
-thickness = 2
-pygame.draw.circle(screen, WHITE, (x, y), radius, thickness)
-
-# обновление экрана
-pygame.display.flip()
-
-# главный игровой цикл
-running = True
-while running:
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
-
-# выход из Pygame
-pygame.quit()
+if len(common_nums) > 0:
+    print("Есть общие числа в массивах:")
+    print(common_nums)
+else:
+    print("Общих чисел в массивах нет.")

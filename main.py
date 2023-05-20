@@ -18,6 +18,7 @@ CELL_POS = [[[0, 0], [200, 200]],
             [[0, 402], [200, 600]],
             [[202, 402], [400, 600]],
             [[402, 402], [600, 600]]]
+WIN_COMBINATIONS = [[1, 2, 3], [4, 5, 6], [7, 8, 9], [1, 4, 7], [2, 5, 8], [3, 6, 9], [1, 5, 9], [3, 5, 7]]
 
 
 class Player:
@@ -28,7 +29,6 @@ class Player:
         self.go_cross = True
         self.go_zero = False
         self.num_of_cells_that_are_left = 0
-
 
     def create_cross(self):
         if self.go_cross:
@@ -90,7 +90,13 @@ def main():
                     player.create_cross()
                     player.create_zero()
                 list_for_cross_win.append(player.num_of_cells_that_are_left)
-                print(list_for_cross_win)
+                list_for_cross_win.sort()
+                for combination in WIN_COMBINATIONS:
+                    if combination[0] in list_for_cross_win and combination[1] in list_for_cross_win and combination[2] in list_for_cross_win:
+                        print('win')
+                        break
+
+#                print(list_for_cross_win)
         pygame.display.update()
         clock.tick(30)
     pygame.quit()
