@@ -1,17 +1,31 @@
 import pygame
 
+# инициализация Pygame
 pygame.init()
-size = (800, 600)
-screen = pygame.display.set_mode(size)
-pygame.display.set_caption("My Game")
 
+# установка цветов
+BLACK = (0, 0, 0)
+WHITE = (255, 255, 255)
 
-while True:
+# создание экрана
+screen = pygame.display.set_mode((500, 500))
+pygame.display.set_caption("Контур круга")
+
+# рисование круга
+x, y = 250, 250
+radius = 50
+thickness = 2
+pygame.draw.circle(screen, WHITE, (x, y), radius, thickness)
+
+# обновление экрана
+pygame.display.flip()
+
+# главный игровой цикл
+running = True
+while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
-            pygame.quit()
-            exit()
-        elif event.type == pygame.MOUSEBUTTONDOWN:
-            pos = pygame.mouse.get_pos()
-            print(pos[0], pos[1])
-            print(pos)
+            running = False
+
+# выход из Pygame
+pygame.quit()
