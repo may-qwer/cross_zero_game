@@ -1,13 +1,23 @@
-array1 = [1, 3, 5, 6, 9]
-array2 = [1, 5, 9]
+import pygame
 
-set1 = set(array1)
-set2 = set(array2)
+# Инициализация Pygame
+pygame.init()
 
-common_nums = set1.intersection(set2)
+# Создание окна
+screen = pygame.display.set_mode((800, 600))
 
-if len(common_nums) > 0:
-    print("Есть общие числа в массивах:")
-    print(common_nums)
-else:
-    print("Общих чисел в массивах нет.")
+# Задаем прозрачный цвет
+transparent = (255, 0, 0, 0)
+
+# Заполняем экран прозрачным цветом
+screen.fill(transparent)
+
+# Отображаем изменения на экране
+pygame.display.flip()
+
+# Зацикливаем программу до закрытия окна
+while True:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            pygame.quit()
+            exit()

@@ -1,5 +1,6 @@
 import pygame
 import random
+import time
 
 LINE_COORD = [[[200, 20], [200, 580]],
               [[400, 20], [400, 580]],
@@ -21,6 +22,7 @@ CELL_POS = [[[0, 0], [200, 200]],
 WIN_COMBINATIONS = [[1, 2, 3], [4, 5, 6], [7, 8, 9], [1, 4, 7], [2, 5, 8], [3, 6, 9], [1, 5, 9], [3, 5, 7]]
 
 
+
 class Player:
     def __init__(self, mouse_pos, window, cells_pos):
         self.cells_pos = cells_pos
@@ -28,7 +30,10 @@ class Player:
         self.window = window
         self.go_cross = True
         self.go_zero = False
-        self.num_of_cells_that_are_left = 0
+        self.cross_num_of_cells_that_are_left = 0
+        self.zero_num_of_cells_that_are_left = 0
+
+
 
     def create_cross(self):
         if self.go_cross:
@@ -37,7 +42,7 @@ class Player:
                     pygame.draw.line(self.window, [57, 50, 255], (cell[0][0] + 40, cell[0][1] + 40), (cell[1][0] - 40, cell[1][1] - 40), 6)
                     pygame.draw.line(self.window, [57, 50, 255], (cell[0][0] + 160, cell[0][1] + 40), (cell[1][0] - 160, cell[1][1] - 40), 6)
                     global CELL_POS
-                    self.num_of_cells_that_are_left = CELL_POS.index(cell)+1
+                    self.cross_num_of_cells_that_are_left = CELL_POS.index(cell)+1
                     self.cells_pos.remove(cell)
                     self.go_cross = False
                     self.go_zero = True
@@ -47,6 +52,8 @@ class Player:
             if self.go_zero:
                 choose_cell = random.choice(self.cells_pos)
                 pygame.draw.circle(self.window, [255, 88, 27], ((choose_cell[0][0]+choose_cell[1][0])/2, (choose_cell[0][1]+choose_cell[1][1])/2), 90, 6)
+                global CELL_POS
+                self.zero_num_of_cells_that_are_left = CELL_POS.index(choose_cell) + 1
                 self.cells_pos.remove(choose_cell)
                 self.go_zero = False
                 self.go_cross = True
@@ -57,6 +64,14 @@ class Player:
             self.window.blit(pygame.font.Font(None, 80).render('Game end!', True, (26, 255, 255)), (150, 220))
             self.window.blit(pygame.font.Font(None, 40).render('Press SPACE to restart. Press ESC to quit.', True, (19, 137, 155)), (30, 290))
 
+    def cross_win_screen(self):
+        self.window.blit(pygame.font.Font(None, 80).render('You WIN!', True, [196, 166, 255]), (170, 220))
+        self.window.blit(pygame.font.Font(None, 40).render('Press SPACE to restart. Press ESC to quit.', True, [36, 31, 183]), (30, 290))
+
+    def zero_win_screen(self):
+        self.window.blit(pygame.font.Font(None, 80).render('You LOSS!', True, [255, 88, 27]), (150, 220))
+        self.window.blit(pygame.font.Font(None, 40).render('Press SPACE to restart. Press ESC to quit.', True, [193, 71, 27]), (30, 290))
+
 
 def main():
     window = pygame.display.set_mode((600, 600))
@@ -66,6 +81,8 @@ def main():
     window.fill((0, 0, 0))
     cells_pos = []
     list_for_cross_win = []
+    list_for_zero_win = []
+    game_end = False
     for cell in CELL_POS:
         cells_pos.append(cell)
     for line in LINE_COORD:
@@ -86,17 +103,39 @@ def main():
                 mouse_pos = pygame.mouse.get_pos()
                 player = Player(mouse_pos, window, cells_pos)
                 player.end_game_screen()
-                if player.go_cross or player.go_zero:
+                if player.go_cross or player.go_zero and not game_end:
                     player.create_cross()
+                    list_for_cross_win.append(player.cross_num_of_cells_that_are_left)
+                    list_for_cross_win.sort()
+                    for combination in WIN_COMBINATIONS:
+                        if combination[0] in list_for_cross_win and combination[1] in list_for_cross_win and combination[2] in list_for_cross_win:
+                            player.cross_win_screen()
+                            game_end = True
+                            break
                     player.create_zero()
-                list_for_cross_win.append(player.num_of_cells_that_are_left)
-                list_for_cross_win.sort()
-                for combination in WIN_COMBINATIONS:
-                    if combination[0] in list_for_cross_win and combination[1] in list_for_cross_win and combination[2] in list_for_cross_win:
-                        print('win')
-                        break
-
-#                print(list_for_cross_win)
+                    list_for_zero_win.append(player.zero_num_of_cells_that_are_left)
+                    list_for_zero_win.sort()
+                    for combination in WIN_COMBINATIONS:
+                        if combination[0] in list_for_zero_win and combination[1] in list_for_zero_win and combination[2] in list_for_zero_win:
+                            player.zero_win_screen()
+                            game_end = True
+                            break
+                    # list_for_cross_win.append(player.cross_num_of_cells_that_are_left)
+                # list_for_cross_win.sort()
+                # if not game_end:
+                #     for combination in WIN_COMBINATIONS:
+                #         if combination[0] in list_for_cross_win and combination[1] in list_for_cross_win and combination[2] in list_for_cross_win:
+                #             player.cross_win_screen()
+                #             game_end = True
+                #             break
+                #     list_for_zero_win.append(player.zero_num_of_cells_that_are_left)
+                #     list_for_zero_win.sort()
+                # if not game_end:
+                #     for combination in WIN_COMBINATIONS:
+                #         if combination[0] in list_for_zero_win and combination[1] in list_for_zero_win and combination[2] in list_for_zero_win:
+                #             player.zero_win_screen()
+                #             game_end = True
+                #             break
         pygame.display.update()
         clock.tick(30)
     pygame.quit()
