@@ -55,9 +55,12 @@ def check_line(sum_O, sum_X):
         o = 0
         x = 0
 
+        # в maps берется j элемент из line и смотрит равен ли он "О"
+
         for j in range(0, 3):
             if maps[line[j]] == "O":
                 o = o + 1
+                print(maps[line[j]])
             if maps[line[j]] == "X":
                 x = x + 1
 
@@ -132,4 +135,4 @@ while game_over == False:
 
 # Игра окончена. Покажем карту. Объявим победителя.        
 print_maps()
-print("Победил", win) 
+print("Победил", win)

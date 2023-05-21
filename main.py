@@ -19,15 +19,46 @@ CELL_POS = [[[0, 0], [200, 200]],
             [[0, 402], [200, 600]],
             [[202, 402], [400, 600]],
             [[402, 402], [600, 600]]]
-WIN_COMBINATIONS = [[1, 2, 3], [4, 5, 6], [7, 8, 9], [1, 4, 7], [2, 5, 8], [3, 6, 9], [1, 5, 9], [3, 5, 7]]
+WIN_COMBINATIONS = [[1, 2, 3],
+                    [4, 5, 6],
+                    [7, 8, 9],
+                    [1, 4, 7],
+                    [2, 5, 8],
+                    [3, 6, 9],
+                    [1, 5, 9],
+                    [3, 5, 7]]
 
 
+class AI:
+    def __init__(self, list_for_ai, win_combination):
+        self.list_for_ai = list_for_ai
+        self.win_matrix = []
+        for comb in win_combination:
+            self.win_matrix.append(comb)
+
+    def list_to_matrix(self):
+        return [[self.list_for_ai[0], self.list_for_ai[1], self.list_for_ai[2]], [self.list_for_ai[3], self.list_for_ai[4], self.list_for_ai[5]], [self.list_for_ai[6], self.list_for_ai[7], self.list_for_ai[8]]]
+
+#['cross', 'zero', 'zero', 4, 'cross', 6, 7, 8, 9]
+    def replace_cross_or_zero_in_win_comb(self, sum_zero, sum_cross):
+        for comb in self.win_matrix:
+            num_zero = 0
+            num_cross = 0
+            for j in range(1, 3):
+                for element in range(1, len(self.list_for_ai)):
+                    if elem 
+
+
+
+    def make_choose(self):
+        pass
 
 
 class Player:
     def __init__(self, mouse_pos, window, cells_pos, list_for_ai):
         self.cells_pos = cells_pos
         self.list_for_ai = list_for_ai
+        self.matrix_for_ai = [[], [], []]
         self.mouse_pos = mouse_pos
         self.window = window
         self.go_cross = True
@@ -45,24 +76,28 @@ class Player:
                     pygame.draw.line(self.window, [57, 50, 255], (cell[0][0] + 160, cell[0][1] + 40), (cell[1][0] - 160, cell[1][1] - 40), 6)
                     global CELL_POS
                     self.cross_num_of_cells_that_are_left = CELL_POS.index(cell)+1
-                    self.list_for_ii.remove(self.cross_num_of_cells_that_are_left)
-                    self.list_for_ii.insert(self.cross_num_of_cells_that_are_left-1, 'cross')
+                    self.list_for_ai.remove(self.cross_num_of_cells_that_are_left)
+                    self.list_for_ai.insert(self.cross_num_of_cells_that_are_left-1, 'cross')
                     self.cells_pos.remove(cell)
-                    print(self.list_for_ii)
+                    print(self.list_for_ai)
                     self.go_cross = False
                     self.go_zero = True
 
     def create_zero(self):
-        if len(self.cells_pos) != 0:
-            if self.go_zero:
+        if len(self.cells_pos) != 0 and self.go_zero:
+            # 1) если на какой либо из победных линий 2 свои фигуры и 0 чужих - ставим
+            # 2) если на какой либо из победных линий 2 чужие фигуры и 0 своих - ставим
+            # 3) если 1 фигура своя и 0 чужих - ставим
+            # 4) центр пуст, то занимаем центр
+            # 5) если цент занят, то занимаем любую ячейку
                 choose_cell = random.choice(self.cells_pos)
                 pygame.draw.circle(self.window, [255, 88, 27], ((choose_cell[0][0]+choose_cell[1][0])/2, (choose_cell[0][1]+choose_cell[1][1])/2), 90, 6)
                 global CELL_POS
                 self.zero_num_of_cells_that_are_left = CELL_POS.index(choose_cell) + 1
-                self.list_for_ii.remove(self.zero_num_of_cells_that_are_left)
-                self.list_for_ii.insert(self.zero_num_of_cells_that_are_left - 1, 'zero')
+                self.list_for_ai.remove(self.zero_num_of_cells_that_are_left)
+                self.list_for_ai.insert(self.zero_num_of_cells_that_are_left - 1, 'zero')
                 self.cells_pos.remove(choose_cell)
-                print(self.list_for_ii)
+                print(self.list_for_ai)
                 self.go_zero = False
                 self.go_cross = True
 
