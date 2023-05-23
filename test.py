@@ -60,7 +60,6 @@ def check_line(sum_O, sum_X):
         for j in range(0, 3):
             if maps[line[j]] == "O":
                 o = o + 1
-                print(maps[line[j]])
             if maps[line[j]] == "X":
                 x = x + 1
 
@@ -96,6 +95,7 @@ def AI():
     if step == "":
         if maps[0] != "X" and maps[0] != "O":
             step = 1
+
 
     return step
 
